@@ -2,6 +2,7 @@ import { compare } from "bcrypt-ts";
 import { usersTable } from "../../db/schema";
 import { useDrizzle } from "../../utils/drizzle";
 import { eq } from "drizzle-orm";
+import jwt from "jsonwebtoken";
 
 export default defineEventHandler(async (e) => {
   const { password, name } = await readBody(e);
@@ -20,5 +21,10 @@ export default defineEventHandler(async (e) => {
     throw createError({ statusCode: 401, message: "Invalid password" });
   }
 
-  return { success: true };
+  const token = jwt.sign({ id: user.id, name: user.name }, process.env.JWT_PRIVATE!, {
+    algorithm: "HS256",
+    expiresIn: "24h",
+  });
+
+  return { token };
 });

@@ -21,7 +21,7 @@
 const localval = ref(0);
 const globalval = useState<number>("count", () => 0);
 
-const { data, pending } = useFetch("/api/hello", { server: false });
+const { data, pending } = useLazyFetch("/api/hello");
 
 useHead({
   title: "W^^W",
